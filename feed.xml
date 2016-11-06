@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>
+<channel>
+<atom:link href='http://blog.lovecankill.com' rel='self' type='application/rss+xml'/>
+<title>
+(love can kill)
+</title>
+<link>
+http://blog.lovecankill.com
+</link>
+<description>
+Something bittersweat
+</description>
+<lastBuildDate>
+Sun, 06 Nov 2016 23:43:06 +0800
+</lastBuildDate>
+<generator>
+clj-rss
+</generator>
+<item>
+<guid>
+http://blog.lovecankill.com/posts/2016-11-06-first-post/
+</guid>
+<link>
+http://blog.lovecankill.com/posts/2016-11-06-first-post/
+</link>
+<title>
+好久沒有寫部落格
+</title>
+<description>
+&lt;p&gt;好多年前臺灣部落格開始蓬勃發展時，當時也跟風開始寫文章。但是只是一頭熱，沒多久就放棄了。&lt;/p&gt;&lt;p&gt;好幾年過去了，現在心裏又萌起寫文章的念頭，希望這次可以持續久一點。那就拭目以待吧。&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 06 Nov 2016 00:00:00 +0800
+</pubDate>
+</item>
+</channel>
+</rss>
