@@ -12,11 +12,105 @@ http://blog.lovecankill.com
 Something bittersweat
 </description>
 <lastBuildDate>
-Mon, 07 Nov 2016 09:30:48 +0800
+Tue, 08 Nov 2016 15:36:00 +0800
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://blog.lovecankill.com/posts/2016-11-08-oneday-typescript/
+</guid>
+<link>
+http://blog.lovecankill.com/posts/2016-11-08-oneday-typescript/
+</link>
+<title>
+TypeScript 一日課
+</title>
+<description>
+&lt;h2&gt;&lt;a name=&quot;緣起&quot;&gt;&lt;/a&gt;緣起&lt;/h2&gt;&lt;p&gt;上週六 (11/5) 參加了由 &lt;a href='https://skilltree.my/'&gt;Skilltree&lt;/a&gt; 舉辦的 &lt;a href='https://skilltree.my/events/6kafn'&gt;TypeScript 新手入門班&lt;/a&gt; 付費課程，希望藉由這個課程快速地了解 TypeScript 的大致面貌。&lt;/p&gt;&lt;p&gt;上完課程後，覺得是一門可以投資的語言，它並不像它的前輩 CoffeeScript 或 LiveScript，讓寫程式的人因爲歧義性而不易掌握，不僅有簡單易懂的語法可以與 JavaScript 相對應，更增加了型別的宣告與檢查，不會因爲型別的問題而在運行程式時，出現非預期的錯誤；還有友善的物件導向支援語法。&lt;/p&gt;&lt;p&gt;以下介紹 TypeScript 的特性與語法，也算是自己的課後回顧。&lt;/p&gt;&lt;hr/&gt;&lt;h2&gt;&lt;a name=&quot;typescript&amp;#95;的特性與語法&quot;&gt;&lt;/a&gt;TypeScript 的特性與語法&lt;/h2&gt;&lt;h3&gt;&lt;a name=&quot;轉譯&quot;&gt;&lt;/a&gt;轉譯&lt;/h3&gt;&lt;p&gt;TypeScript 寫成的程式經由工具會轉譯成 JavaScript，與一般的 JavaScript 並無二致。因此可以在各個瀏覽器與平臺間使用&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;強型別&quot;&gt;&lt;/a&gt;強型別&lt;/h3&gt;&lt;p&gt;JavaScript 中雖然有幾種型別，但是由於變數的型別是可以動態變換的，因此若是在撰寫時不注意，就可能會發生不同型別之間誤用的可能。而 TypeScript 支援強型別，會阻止不同型別之間誤用而發生悲劇。&lt;/p&gt;&lt;p&gt;如以下的函數就宣告了兩個參數爲數字，返回值亦爲數字。使用此函數若是丟進非數字型態的參數，IDE 或是轉譯 TypeScript 成 JavaScript 的工具便會報錯。&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;function plus&amp;#40;a: number, b: number&amp;#41;: number {
+  return a + b;
+}
+
+var r1 = plus&amp;#40;1, 2&amp;#41;;
+var r2 = plus&amp;#40;1, '2'&amp;#41;; // 錯誤
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;除了支援 JavaScript 的型別之外 (Boolean, String, Number, Array, Enum, Any)，TypeScript 也可以制定自己的類型。&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;常數與限定範圍變數&quot;&gt;&lt;/a&gt;常數與限定範圍變數&lt;/h3&gt;&lt;p&gt;常數是使用 &lt;code&gt;const&lt;/code&gt; 關鍵字來定義不會更改的變數，限定範圍變數則是使用 &lt;code&gt;let&lt;/code&gt; 關鍵字來定義，使用限定範圍變數會防止程式在變數的作用域外，還能夠存取的問題。&lt;code&gt;let&lt;/code&gt; 關鍵字能夠將變數限定在某個範圍內。&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;const RETRY = 3;
+
+var count = 1;
+for &amp;#40;var i = 0; i &amp;lt; 10; i++&amp;#41; {
+  let count = i;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;&lt;a name=&quot;函數&quot;&gt;&lt;/a&gt;函數&lt;/h3&gt;&lt;p&gt;如前面範例所提供，TypeScript 的函數參數與返回值可以寫上型態，若使用時型態不符，則會出現錯誤訊息告知。&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;function GetDiscountPrice&amp;#40;price: number&amp;#41;: number {
+  if &amp;#40;price &amp;gt; 200&amp;#41; {
+    return price &amp;#42; 0.8;
+  }
+  return price;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h4&gt;&lt;a name=&quot;箭頭函數&quot;&gt;&lt;/a&gt;箭頭函數&lt;/h4&gt;&lt;p&gt;JavaScript 中的 this 總是讓人一不小心就着了道，如果神智不夠清楚。使用箭頭函數則會自動將函數中的 this 變數綁定到此函數所在的物件，不會因爲 this 變數在不同狀況下的不同值而中箭了。&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;function Person&amp;#40;&amp;#41;{
+  this.age = 0;
+
+  setInterval&amp;#40;&amp;#40;&amp;#41; =&amp;gt; {
+    this.age++; // this 代表的是 Person 物件
+  }, 1000&amp;#41;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;&lt;a name=&quot;友好的物件導向語法&quot;&gt;&lt;/a&gt;友好的物件導向語法&lt;/h3&gt;&lt;p&gt;TypeScript 支援與 Java, C# 等主流物件導向語言相似的語法，物件的屬性還可以定義是否准許公開存取。以下範例展示如何定義建構式與物件屬性：&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;class Student {
+  private gender: string;
+  age: number; // 預設是 public
+
+  constructor&amp;#40;gender: string, age: number&amp;#41; {
+    this.gender = gender;
+    this.age = age;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h4&gt;&lt;a name=&quot;繼承&quot;&gt;&lt;/a&gt;繼承&lt;/h4&gt;&lt;p&gt;物件導向其中一個優點就是能夠利用繼承，將父類別已經提供的功能直接搬過來再利用，或是覆蓋原有的功能，提供另一種功能。TypeScript 利用 &lt;code&gt;extends&lt;/code&gt; 關鍵字來支援繼承。&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;class Shape {
+  draw&amp;#40;&amp;#41; {
+    console.log&amp;#40;&amp;quot;Draw shape&amp;quot;&amp;#41;;
+  }
+}
+
+class Circle extends Shape {
+  draw&amp;#40;&amp;#41; {
+    console.log&amp;#40;&amp;quot;Draw circle&amp;quot;&amp;#41;;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h4&gt;&lt;a name=&quot;介面&quot;&gt;&lt;/a&gt;介面&lt;/h4&gt;&lt;p&gt;介面提供了比繼承更彈性的作法，它只定義了一組協議或合約而不提供實作，只要實作了這個介面就符合了合約，使用此介面的人並不需要知道實作此介面的物件究竟爲何。TypeScript 提供了 &lt;code&gt;interface&lt;/code&gt; 關鍵字。&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;interface Calculator {
+  add&amp;#40;a: number, b: number&amp;#41;: number;
+  subtract&amp;#40;a: number, b: number&amp;#41;: number;
+}
+
+class SimpleCalculator implements Calculator {
+    add&amp;#40;a: number, b: number&amp;#41;: number { return a + b; }
+    subtract&amp;#40;a: number, b: number&amp;#41;: number { return a - b; }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h4&gt;&lt;a name=&quot;泛型&quot;&gt;&lt;/a&gt;泛型&lt;/h4&gt;&lt;p&gt;泛型是一種在撰寫程式時，將型態視爲參數的設計方法，直到使用這些程式才決定要使用哪些型態。例如在 C++ 中會定義一些通用的資料結構或演算法，這些程式能夠適用大多數的型態。&lt;/p&gt;&lt;p&gt;在 TypeScript 中泛型函數的寫法：&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;function identity&amp;lt;T&amp;gt;&amp;#40;arg: T&amp;#41;: T {
+  return arg;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在 TypeScript 中泛型類別的寫法：&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;class GenericNumber&amp;lt;T&amp;gt; {
+    zeroValue: T;
+    add: &amp;#40;x: T, y: T&amp;#41; =&amp;gt; T;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;根據前面的例子可以看到，定義泛型型態是利用角括號 (&lt;code&gt;&amp;lt;&amp;gt;&lt;/code&gt;) 將型態包起來。&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;模組&quot;&gt;&lt;/a&gt;模組&lt;/h3&gt;&lt;p&gt;TypeScript 提供了 &lt;code&gt;module&lt;/code&gt; 關鍵字可以將程式碼分門別類，相同名稱的兩個函數可以分類在不同的模組底下，就不會有衝突發生，將程式碼以功能分類也可以增加對程式的理解。&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;module Product {
+  export function Validate&amp;#40;data&amp;#41; {
+    //// 一些程式
+    return true;
+  }
+}
+
+// 在其他程式中如此使用
+Product.Validate&amp;#40;data&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;&lt;a name=&quot;與其它&amp;#95;javascript&amp;#95;函式庫協作&quot;&gt;&lt;/a&gt;與其它 JavaScript 函式庫協作&lt;/h3&gt;&lt;p&gt;在 TypeScript 還沒有發明以前，就已經有非常多好用的 JavaScript 函式庫，例如 jQuery。這些 JavaScript 並沒有明確指出函數的型態，要怎麼在 TypeScript 使用呢？&lt;/p&gt;&lt;p&gt;TypeScript 提供引入定義檔的方式，其中寫了第三方函式庫的型態定義，TypeScript 便可以藉助這些定義與第三方函式庫協作。&lt;/p&gt;&lt;p&gt;引入定義檔的寫法如下：&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;typescript&quot;&gt;/// &amp;lt;reference path=&amp;quot;./node&amp;#95;modules/@types/jquery/index.d.ts&amp;quot; /&amp;gt;
+$&amp;#40;'#product'&amp;#41;.on&amp;#40;'click', function&amp;#40;&amp;#41; {
+   //// 更多程式
+}&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;至於如何安裝需要的定義檔，請參考 &lt;a href='http://definitelytyped.org/'&gt;DefinitelyTyped&lt;/a&gt;。&lt;/p&gt;&lt;hr/&gt;&lt;h2&gt;&lt;a name=&quot;後記&quot;&gt;&lt;/a&gt;後記&lt;/h2&gt;&lt;p&gt;當天的課程除了介紹 TypeScript 之外，也講解了 TypeScript 與 C# 之間前後端的快速整合，由於這些快速整合與 Visual Studio 有關，而目前我的工作機器是 Mac 和使用 Visual Studio Code，因此無法使用這些祕技，在此就不再贅述。&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;結論&quot;&gt;&lt;/a&gt;結論&lt;/h2&gt;&lt;p&gt;如開頭所述，TypeScript 是個值得投資的語言，不僅可以與 JavaScript 整合，還提供了型別檢查，友善類別語法等等，藉由 IDE 或轉譯工具的幫助，在撰寫時就可以知道錯誤，不至於要等到程式運行時才出現非預期的錯誤。&lt;/p&gt;&lt;p&gt;除了前面介紹的語法與特性之外，TypeScript 還提供了其它好用的功能，有興趣的朋友可以到官網與閱讀其它文件來瞭解。&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;參考資料&quot;&gt;&lt;/a&gt;參考資料&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='http://www.typescriptlang.org/index.html'&gt;TypeScript 官網&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href='https://www.gitbook.com/book/zhongsp/typescript-handbook'&gt;TypeScript Handbook 中文版&lt;/a&gt;&lt;/li&gt;&lt;li&gt;c9s 寫的 &lt;a href='https://medium.com/@c9s/%E5%B0%8F%E7%B7%A8%E5%B9%AB%E4%BD%A0%E8%B8%A9%E5%9C%B0%E9%9B%B7%E7%B3%BB%E5%88%97-typescript-%E9%81%A9%E5%90%88%E6%88%91%E5%97%8E-e15b5a0607d7#.eos7ixx50'&gt;TypeScript 導盲與踩雷文&lt;/a&gt;，幫助你瞭解 TypeScript 究竟適不適合你&lt;/li&gt;&lt;/ul&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 08 Nov 2016 00:00:00 +0800
+</pubDate>
+</item>
 <item>
 <guid>
 http://blog.lovecankill.com/posts/2016-11-06-first-post/
