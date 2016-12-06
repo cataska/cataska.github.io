@@ -12,11 +12,56 @@ http://blog.lovecankill.com
 Something bittersweat
 </description>
 <lastBuildDate>
-Tue, 08 Nov 2016 15:36:00 +0800
+Tue, 06 Dec 2016 20:53:05 +0800
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://blog.lovecankill.com/posts/2016-12-06-hello-linebot/
+</guid>
+<link>
+http://blog.lovecankill.com/posts/2016-12-06-hello-linebot/
+</link>
+<title>
+使用 Clojure 打造簡易的 LINE Bot - 起手式
+</title>
+<description>
+&lt;h2&gt;&lt;a name=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;今年是對話式介面 (Conversational UI) 的一年，各家即時通訊廠商紛紛推出自家的機器人平臺 (Bot Platform)，如 Facebook、LINE、Microsoft 與 Telegram 等等。&lt;/p&gt;&lt;p&gt;使用者可以透過機器人 (Bot)，以對話方式來取得需要的資訊，或是完成想做的事，而目前在臺灣最流行的通訊軟體就是 LINE。之後將會以一系列的文章來打造簡易的 LINE 機器人，使用的程式語言是 Clojure。&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;前置作業&quot;&gt;&lt;/a&gt;前置作業&lt;/h2&gt;&lt;p&gt;由於 Clojure 是一門建立在 JVM 之上的程式語言，因此 JDK/JRE 是不可免的，在 &lt;a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html'&gt;Java 下載頁面&lt;/a&gt;可以下載到最新的版本。&lt;/p&gt;&lt;p&gt;另外需要的工具是在 Clojure 生態系被廣泛使用的 &lt;a href='http://leiningen.org'&gt;Leiningen&lt;/a&gt;。它可以建立專案、執行測試、編譯程式碼、取得專案需要的相依函式庫與打包專案等等功能。最簡單的下載方法就是從&lt;a href='https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein'&gt;這裡&lt;/a&gt;下載檔案之後，執行它便完成初始化了。&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;建立專案&quot;&gt;&lt;/a&gt;建立專案&lt;/h2&gt;&lt;p&gt;在這一系列的文章裡，我們不會使用任何一個 Clojure 的網站框架 (web framework)，而是使用個別的函式庫來完成工作。首先使用 Compojure 提供的專案範本 (project template) 來建立專案：&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;$ lein new compojure webapp
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href='https://github.com/weavejester/compojure'&gt;Compojure&lt;/a&gt; 是一個架構在 Ring 之上的路由函式庫，它將處理各方發送過來的請求予以簡化，如網站各路徑的資源要求。而 &lt;a href='https://github.com/ring-clojure/ring'&gt;Ring&lt;/a&gt; 則是一個類似 Python 的 WSGI 或 Ruby 下 Rack 的函式庫，將 HTTP 的規則簡化成統一的 API，並能夠以元件的方式建構大型的網站應用程式。&lt;/p&gt;&lt;p&gt;接着在命令列裡輸入：&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;$ cd webapp; lein run server-headless
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再開啓你常用的瀏覽器並在網址列裡輸入 &lt;code&gt;http://localhost:3000&lt;/code&gt; 後按下 Enter，你應該會看到寫着 &lt;code&gt;Hello World&lt;/code&gt; 網頁出現，這表示第一步已經成功了！值得注意的是第一次輸入 &lt;code&gt;lein run server-headless&lt;/code&gt; 的時候，可能因爲要下載其他需要用到的函式庫，所以還無法在網頁中看到內容，最好等到命令列中出現 &lt;code&gt;Started server on port 3000&lt;/code&gt; 後再開啓瀏覽器。&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;新增路由&quot;&gt;&lt;/a&gt;新增路由&lt;/h2&gt;&lt;p&gt;依據 LINE 官方開發文件 (&lt;a href='https://devdocs.line.me/en/'&gt;英文版&lt;/a&gt;/&lt;a href='https://devdocs.line.me/ja/'&gt;日文版&lt;/a&gt;)，使用 Messaging API 的開發者必須提供 Webhook 給 LINE，當使用者將機器人加入好友或傳訊息給機器人時，LINE 會透過 Webhook 提供的網址傳遞訊息給機器人，機器人再根據收到的訊息作出回應。&lt;/p&gt;&lt;p&gt;要添加 Webhook 讓 LINE 傳訊息過來，除了必須在 LINE 開發者網站上填寫之外 (之後的文章會提到)，還必須修改 &lt;code&gt;src/webapp/handler.clj&lt;/code&gt;，在還未修改之前 &lt;code&gt;handler.clj&lt;/code&gt; 內容如下：&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;ns webapp.handler
+  &amp;#40;:require &amp;#91;compojure.core :refer :all&amp;#93;
+            &amp;#91;compojure.route :as route&amp;#93;
+            &amp;#91;ring.middleware.defaults :refer &amp;#91;wrap-defaults site-defaults&amp;#93;&amp;#93;&amp;#41;&amp;#41;
+
+&amp;#40;defroutes app-routes
+  &amp;#40;GET &amp;quot;/&amp;quot; &amp;#91;&amp;#93; &amp;quot;Hello World&amp;quot;&amp;#41;
+  &amp;#40;route/not-found &amp;quot;Not Found&amp;quot;&amp;#41;&amp;#41;
+
+&amp;#40;def app
+  &amp;#40;wrap-defaults app-routes site-defaults&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;以下加入一個名爲 &lt;code&gt;callback&lt;/code&gt; 的網址路徑，接受 LINE 傳送過來的訊息：&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;ns webapp.handler
+  &amp;#40;:require &amp;#91;compojure.core :refer :all&amp;#93;
+            &amp;#91;compojure.route :as route&amp;#93;
+            &amp;#91;ring.middleware.defaults :refer &amp;#91;wrap-defaults site-defaults&amp;#93;&amp;#93;&amp;#41;&amp;#41;
+
+&amp;#40;defroutes app-routes
+  &amp;#40;GET &amp;quot;/&amp;quot; &amp;#91;&amp;#93; &amp;quot;Hello World&amp;quot;&amp;#41;
+  &amp;#40;GET &amp;quot;/callback&amp;quot; &amp;#91;&amp;#93; &amp;quot;Hello LINE Messaging API&amp;quot;&amp;#41;
+  &amp;#40;route/not-found &amp;quot;Not Found&amp;quot;&amp;#41;&amp;#41;
+
+&amp;#40;def app
+  &amp;#40;wrap-defaults app-routes site-defaults&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;根據以上的程式可以看到新增了一個名爲 &lt;code&gt;callback&lt;/code&gt; 的路由，當有人造訪這個路由，將會顯示 &lt;strong&gt;Hello LINE Messaging API&lt;/strong&gt;。我們可以打開瀏覽器看看內容是否正確，在瀏覽器輸入 &lt;code&gt;http://localhost:3000/callback&lt;/code&gt; 後便會看到訊息出現在網頁上。&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;回顧&quot;&gt;&lt;/a&gt;回顧&lt;/h2&gt;&lt;p&gt;在第一篇系列文章裡我們使用了 Ring 與 Compojure 建立了網站的雛形，並新增了接受 LINE 訊息的網址路徑。詳細的程式碼，請參閱&lt;a href='https://github.com/clojure-tw/line-bot-sdk-clojure/tree/0402187bd5c2c891a2bd48cdc45ee726f24a42fc'&gt;這裡&lt;/a&gt;。&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 06 Dec 2016 00:00:00 +0800
+</pubDate>
+</item>
 <item>
 <guid>
 http://blog.lovecankill.com/posts/2016-11-08-oneday-typescript/
